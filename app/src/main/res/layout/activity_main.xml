@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1a1a1a">
+
+    <TextView
+        android:id="@+id/tvTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:text="Wear OS"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <ListView
+        android:id="@+id/lista"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:divider="#333333"
+        android:dividerHeight="4dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp" />
+
+    <Button
+        android:id="@+id/btnTestarAudio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Testar Áudio"
+        android:textSize="12sp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp" />
+
+    <Button
+        android:id="@+id/btnAbrirBluetooth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:text="Abrir Bluetooth"
+        android:textSize="12sp" />
+
+</LinearLayout>
