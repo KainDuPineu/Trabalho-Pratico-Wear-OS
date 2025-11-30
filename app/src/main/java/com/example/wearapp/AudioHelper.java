@@ -16,12 +16,10 @@ public class AudioHelper {
     }
     
     public boolean audioOutputAvailable(int type) {
-        // Verifica se o dispositivo tem recurso de saída de áudio
         if (!context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_AUDIO_OUTPUT)) {
             return false;
         }
         
-        // Verifica se existe um dispositivo de áudio do tipo especificado
         AudioDeviceInfo[] devices = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
         for (AudioDeviceInfo device : devices) {
             if (device.getType() == type) {

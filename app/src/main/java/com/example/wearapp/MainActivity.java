@@ -37,23 +37,17 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        // Inicializar componentes
         inicializarComponentes();
         
-        // Configurar AudioHelper
         audioHelper = new AudioHelper(this);
         audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         
-        // Inicializar Text-to-Speech
         inicializarTTS();
         
-        // Registrar callback para detectar dispositivos de áudio
         registrarAudioDeviceCallback();
         
-        // Verificar dispositivos de áudio disponíveis
         verificarDispositivosAudio();
         
-        // Configurar botões
         configurarBotoes();
     }
     
@@ -63,12 +57,10 @@ public class MainActivity extends Activity {
         btnTestarAudio = findViewById(R.id.btnTestarAudio);
         btnAbrirBluetooth = findViewById(R.id.btnAbrirBluetooth);
         
-        // Configurar ListView com adapter
         statusList = new ArrayList<>();
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, statusList);
         lista.setAdapter(adapter);
         
-        // Mensagem inicial
         adicionarStatus("App iniciado - Aguardando verificação de áudio...");
     }
     
@@ -82,7 +74,6 @@ public class MainActivity extends Activity {
                     if (result == TextToSpeech.LANG_MISSING_DATA || 
                         result == TextToSpeech.LANG_NOT_SUPPORTED) {
                         adicionarStatus("⚠ Idioma PT-BR não suportado para voz");
-                        // Tenta inglês como fallback
                         textToSpeech.setLanguage(Locale.US);
                     } else {
                         adicionarStatus("✓ Sistema de voz inicializado");
@@ -98,7 +89,6 @@ public class MainActivity extends Activity {
             public void onAudioDevicesAdded(AudioDeviceInfo[] addedDevices) {
                 super.onAudioDevicesAdded(addedDevices);
                 
-                // Verificar se um fone Bluetooth foi conectado
                 if (audioHelper.audioOutputAvailable(AudioDeviceInfo.TYPE_BLUETOOTH_A2DP)) {
                     adicionarStatus("✓ Fone de ouvido Bluetooth conectado!");
                     Toast.makeText(MainActivity.this, 
@@ -106,7 +96,6 @@ public class MainActivity extends Activity {
                     falarTexto("Bluetooth conectado");
                 }
                 
-                // Atualizar lista de dispositivos
                 verificarDispositivosAudio();
             }
             
@@ -114,25 +103,22 @@ public class MainActivity extends Activity {
             public void onAudioDevicesRemoved(AudioDeviceInfo[] removedDevices) {
                 super.onAudioDevicesRemoved(removedDevices);
                 
-                // Verificar se um fone Bluetooth foi desconectado
                 if (!audioHelper.audioOutputAvailable(AudioDeviceInfo.TYPE_BLUETOOTH_A2DP)) {
                     adicionarStatus("✗ Fone de ouvido Bluetooth desconectado");
                     Toast.makeText(MainActivity.this, 
                         "Bluetooth desconectado", Toast.LENGTH_SHORT).show();
                 }
                 
-                // Atualizar lista de dispositivos
                 verificarDispositivosAudio();
             }
         }, null);
     }
     
     private void verificarDispositivosAudio() {
-        // Limpar status anteriores de dispositivos
+  
         statusList.clear();
         adicionarStatus("=== Dispositivos de Áudio ===");
         
-        // Verificar alto-falante integrado
         boolean temAltoFalante = audioHelper.audioOutputAvailable(
             AudioDeviceInfo.TYPE_BUILTIN_SPEAKER);
         
@@ -142,7 +128,6 @@ public class MainActivity extends Activity {
             adicionarStatus("✗ Alto-falante não disponível");
         }
         
-        // Verificar fone de ouvido Bluetooth
         boolean temBluetoothHeadset = audioHelper.audioOutputAvailable(
             AudioDeviceInfo.TYPE_BLUETOOTH_A2DP);
         
@@ -152,7 +137,6 @@ public class MainActivity extends Activity {
             adicionarStatus("✗ Bluetooth não conectado");
         }
         
-        // Se não houver nenhum dispositivo de áudio
         if (!temAltoFalante && !temBluetoothHeadset) {
             adicionarStatus("⚠ Nenhum dispositivo de áudio detectado");
             adicionarStatus("Configure um fone Bluetooth!");
@@ -162,19 +146,15 @@ public class MainActivity extends Activity {
     }
     
     private void configurarBotoes() {
-        // Botão Testar Áudio
         btnTestarAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Verifica dispositivos primeiro
                 verificarDispositivosAudio();
                 
-                // Tenta reproduzir um som de teste
                 reproduzirAudioTeste();
             }
         });
         
-        // Botão Abrir Bluetooth
         btnAbrirBluetooth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,7 +164,6 @@ public class MainActivity extends Activity {
     }
     
     private void reproduzirAudioTeste() {
-        // Verifica se há dispositivo de áudio disponível
         boolean temAltoFalante = audioHelper.audioOutputAvailable(
             AudioDeviceInfo.TYPE_BUILTIN_SPEAKER);
         boolean temBluetooth = audioHelper.audioOutputAvailable(
@@ -196,19 +175,15 @@ public class MainActivity extends Activity {
                 Toast.LENGTH_LONG).show();
             adicionarStatus("⚠ Erro: Sem dispositivo de áudio");
             
-            // Vibra como feedback alternativo
             vibrarDispositivo();
             return;
         }
         
-        // Reproduz um tom de teste
         try {
             adicionarStatus("♪ Reproduzindo áudio de teste...");
             
-            // Reproduz tom
             reproduzirTom();
             
-            // Fala uma mensagem (aguarda 1 segundo após o tom)
             new android.os.Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -227,7 +202,6 @@ public class MainActivity extends Activity {
     }
     
     private void reproduzirTom() {
-        // Cria um gerador de tons em uma thread separada
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -237,13 +211,12 @@ public class MainActivity extends Activity {
                         ToneGenerator.MAX_VOLUME
                     );
                     
-                    // Reproduz um tom por 500ms
                     toneGen.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 500);
                     
-                    // Aguarda o fim do tom
+
                     Thread.sleep(600);
                     
-                    // Libera recursos
+
                     toneGen.release();
                     
                     runOnUiThread(new Runnable() {
@@ -275,10 +248,9 @@ public class MainActivity extends Activity {
         try {
             Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
             if (vibrator != null && vibrator.hasVibrator()) {
-                vibrator.vibrate(200); // Vibra por 200ms
+                vibrator.vibrate(200);
             }
         } catch (Exception e) {
-            // Ignora se não tiver vibrador
         }
     }
     
@@ -298,7 +270,6 @@ public class MainActivity extends Activity {
         statusList.add(mensagem);
         if (adapter != null) {
             adapter.notifyDataSetChanged();
-            // Scroll para o último item
             lista.smoothScrollToPosition(statusList.size() - 1);
         }
     }
@@ -306,13 +277,11 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Atualizar status quando o app voltar ao foco
         verificarDispositivosAudio();
     }
     
     @Override
     protected void onDestroy() {
-        // Liberar Text-to-Speech
         if (textToSpeech != null) {
             textToSpeech.stop();
             textToSpeech.shutdown();

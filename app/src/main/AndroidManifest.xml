@@ -18,7 +18,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WearApp">
 
-        <!-- SUA ACTIVITY PRINCIPAL -->
         <activity 
             android:name="com.example.wearapp.MainActivity"
             android:exported="true">
